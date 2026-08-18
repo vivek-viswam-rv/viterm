@@ -195,7 +195,22 @@ func (p *Pane) wait() {
 	p.mu.Lock()
 	p.exited = true
 	p.mu.Unlock()
+	debugf("pane shell pid=%d exited: %v", p.cmd.Process.Pid, err)
 	p.notify(ExitEvent{Err: err})
+}
+
+// debugf appends to the file named by VITERM_DEBUG_LOG when set.
+func debugf(format string, args ...any) {
+	path := os.Getenv("VITERM_DEBUG_LOG")
+	if path == "" {
+		return
+	}
+	f, err := os.OpenFile(path, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0o644)
+	if err != nil {
+		return
+	}
+	defer f.Close()
+	fmt.Fprintf(f, format+"\n", args...)
 }
 
 // Resize adjusts both the PTY and the emulated screen.
