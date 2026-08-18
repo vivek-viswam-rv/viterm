@@ -38,6 +38,13 @@ chmod 755 "$APP/Contents/MacOS/viterm-app"
 rm -f "$DIST/viterm-app-arm64" "$DIST/viterm-app-amd64"
 cp "$STAGE/usr/local/bin/viterm" "$APP/Contents/MacOS/viterm"
 
+mkdir -p "$APP/Contents/Resources"
+if [ ! -f "$ROOT/assets/viterm.icns" ]; then
+    go run -C "$ROOT" ./scripts/genicon "$DIST/viterm.iconset"
+    iconutil -c icns "$DIST/viterm.iconset" -o "$ROOT/assets/viterm.icns"
+fi
+cp "$ROOT/assets/viterm.icns" "$APP/Contents/Resources/viterm.icns"
+
 cat > "$APP/Contents/Info.plist" <<'PLIST'
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN"
@@ -56,6 +63,8 @@ cat > "$APP/Contents/Info.plist" <<'PLIST'
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
 	<string>BUNDLE_VERSION</string>
+	<key>CFBundleIconFile</key>
+	<string>viterm</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>11.0</string>
 	<key>NSHighResolutionCapable</key>
