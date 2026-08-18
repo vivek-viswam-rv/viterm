@@ -3,14 +3,17 @@ package ui
 import (
 	"fmt"
 	"image/color"
+	"os"
 	"strings"
 
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
 	"github.com/charmbracelet/x/ansi"
 
+	"github.com/vivekviswam/viterm/internal/config"
 	"github.com/vivekviswam/viterm/internal/layout"
 	"github.com/vivekviswam/viterm/internal/protocol"
+	"github.com/vivekviswam/viterm/internal/theme"
 )
 
 var (
@@ -33,6 +36,36 @@ var (
 	styleFooterAlert   = lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("11"))
 	styleDivider       = lipgloss.NewStyle().Foreground(colorDim)
 )
+
+// configureStyles applies the configured theme and color overrides to the
+// chrome styles. With no theme and no overrides the adaptive ANSI defaults
+// above are kept, so the chrome follows the hosting terminal's palette.
+func configureStyles(cfg config.Settings) {
+	if cfg.Theme == "" && len(cfg.Colors) == 0 && os.Getenv("VITERM_HOST") == "" {
+		return
+	}
+	t := theme.Get(cfg.Theme)
+	accent := lipgloss.Color(pick(cfg.Colors, "accent", t.Chrome.Accent))
+	dim := lipgloss.Color(pick(cfg.Colors, "dim", t.Chrome.Dim))
+	fg := lipgloss.Color(pick(cfg.Colors, "foreground", t.Chrome.Foreground))
+	stripBg := lipgloss.Color(pick(cfg.Colors, "stripBackground", t.Chrome.StripBackground))
+
+	colorAccent, colorDim, colorFg = accent, dim, fg
+	styleStripActive = lipgloss.NewStyle().Bold(true).Foreground(fg).Background(stripBg)
+	styleStripInactive = lipgloss.NewStyle().Foreground(dim)
+	styleTabActive = lipgloss.NewStyle().Bold(true).Foreground(accent)
+	styleTabInactive = lipgloss.NewStyle().Foreground(dim)
+	styleFooter = lipgloss.NewStyle().Foreground(dim)
+	styleFooterAlert = lipgloss.NewStyle().Bold(true).Foreground(accent)
+	styleDivider = lipgloss.NewStyle().Foreground(dim)
+}
+
+func pick(overrides map[string]string, key, fallback string) string {
+	if v, ok := overrides[key]; ok && v != "" {
+		return v
+	}
+	return fallback
+}
 
 // View implements tea.Model.
 func (a *App) View() tea.View {

@@ -24,9 +24,19 @@ lipo -create -output "$STAGE/usr/local/bin/viterm" \
 chmod 755 "$STAGE/usr/local/bin/viterm"
 rm -f "$DIST/viterm-arm64" "$DIST/viterm-amd64"
 
-echo "building launcher app..."
+echo "building window host..."
+CGO_ENABLED=1 GOOS=darwin GOARCH=arm64 go build -C "$ROOT" \
+    -ldflags "-s -w" -o "$DIST/viterm-app-arm64" ./cmd/viterm-app
+CGO_ENABLED=1 GOOS=darwin GOARCH=amd64 go build -C "$ROOT" \
+    -ldflags "-s -w" -o "$DIST/viterm-app-amd64" ./cmd/viterm-app
+
 APP="$STAGE/Applications/viterm.app"
 mkdir -p "$APP/Contents/MacOS"
+lipo -create -output "$APP/Contents/MacOS/viterm-app" \
+    "$DIST/viterm-app-arm64" "$DIST/viterm-app-amd64"
+chmod 755 "$APP/Contents/MacOS/viterm-app"
+rm -f "$DIST/viterm-app-arm64" "$DIST/viterm-app-amd64"
+cp "$STAGE/usr/local/bin/viterm" "$APP/Contents/MacOS/viterm"
 
 cat > "$APP/Contents/Info.plist" <<'PLIST'
 <?xml version="1.0" encoding="UTF-8"?>
@@ -41,25 +51,19 @@ cat > "$APP/Contents/Info.plist" <<'PLIST'
 	<key>CFBundleIdentifier</key>
 	<string>com.vivekviswam.viterm.launcher</string>
 	<key>CFBundleExecutable</key>
-	<string>viterm-launcher</string>
+	<string>viterm-app</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
 	<string>BUNDLE_VERSION</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>11.0</string>
+	<key>NSHighResolutionCapable</key>
+	<true/>
 </dict>
 </plist>
 PLIST
 sed -i '' "s/BUNDLE_VERSION/$VERSION/" "$APP/Contents/Info.plist"
-
-cat > "$APP/Contents/MacOS/viterm-launcher" <<'LAUNCHER'
-#!/bin/sh
-# Opens viterm in the user's terminal. The launcher app exists so viterm can
-# be started from /Applications even though it is a terminal program.
-exec open -a Terminal /usr/local/bin/viterm
-LAUNCHER
-chmod 755 "$APP/Contents/MacOS/viterm-launcher"
 xattr -cr "$STAGE" 2>/dev/null || true
 
 PKG="$DIST/viterm-$VERSION.pkg"

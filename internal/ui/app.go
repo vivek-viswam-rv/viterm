@@ -60,6 +60,7 @@ func New(store *config.Store) (*App, error) {
 	if err != nil {
 		return nil, err
 	}
+	configureStyles(settings)
 	return &App{store: store, settings: settings}, nil
 }
 

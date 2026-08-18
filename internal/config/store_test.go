@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"os"
 	"path/filepath"
+	"reflect"
 	"strings"
 	"testing"
 )
@@ -41,7 +42,7 @@ func TestSettingsRoundTrip(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Settings: %v", err)
 	}
-	if out != in {
+	if !reflect.DeepEqual(out, in) {
 		t.Errorf("round trip = %+v, want %+v", out, in)
 	}
 }
