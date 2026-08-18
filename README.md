@@ -37,9 +37,12 @@ left off.
 ## Installation
 
 On macOS, download `viterm-<version>.pkg` from the releases page and open
-it. The installer places a universal binary at `/usr/local/bin/viterm`. If
-macOS reports that the package is from an unidentified developer, control-
-click the file and choose Open.
+it. The installer places a universal binary at `/usr/local/bin/viterm` and a
+launcher in Applications that opens viterm in Terminal. Because viterm is a
+terminal program, the usual way to start it is simply running `viterm` in
+any terminal; the Applications entry is a convenience. If macOS reports that
+the package is from an unidentified developer, control-click the file and
+choose Open.
 
 With Go installed:
 
