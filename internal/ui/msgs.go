@@ -1,9 +1,9 @@
 package ui
 
 import (
-	"github.com/vivekviswam/viterm/internal/ghx"
-	"github.com/vivekviswam/viterm/internal/protocol"
-	"github.com/vivekviswam/viterm/internal/term"
+	"github.com/vivek-viswam-rv/viterm/internal/ghx"
+	"github.com/vivek-viswam-rv/viterm/internal/protocol"
+	"github.com/vivek-viswam-rv/viterm/internal/term"
 )
 
 // sockCmdMsg carries one socket request into the update loop. The reply

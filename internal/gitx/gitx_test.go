@@ -7,7 +7,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/vivekviswam/viterm/internal/shellx"
+	"github.com/vivek-viswam-rv/viterm/internal/shellx"
 )
 
 func TestSanitizeName(t *testing.T) {

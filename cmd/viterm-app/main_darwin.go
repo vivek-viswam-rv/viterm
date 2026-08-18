@@ -22,8 +22,8 @@ import (
 	"github.com/creack/pty"
 	webview "github.com/webview/webview_go"
 
-	"github.com/vivekviswam/viterm/internal/config"
-	"github.com/vivekviswam/viterm/internal/theme"
+	"github.com/vivek-viswam-rv/viterm/internal/config"
+	"github.com/vivek-viswam-rv/viterm/internal/theme"
 )
 
 //go:embed assets/xterm.js

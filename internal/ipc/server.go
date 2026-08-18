@@ -18,7 +18,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/vivekviswam/viterm/internal/protocol"
+	"github.com/vivek-viswam-rv/viterm/internal/protocol"
 )
 
 // Handler processes a decoded Command and returns the raw reply bytes to

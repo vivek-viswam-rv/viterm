@@ -9,9 +9,9 @@ import (
 	tea "charm.land/bubbletea/v2"
 	"charm.land/lipgloss/v2"
 
-	"github.com/vivekviswam/viterm/internal/config"
-	"github.com/vivekviswam/viterm/internal/gitx"
-	"github.com/vivekviswam/viterm/internal/layout"
+	"github.com/vivek-viswam-rv/viterm/internal/config"
+	"github.com/vivek-viswam-rv/viterm/internal/gitx"
+	"github.com/vivek-viswam-rv/viterm/internal/layout"
 )
 
 // wizardMode is the wizard's current screen.

@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/vivekviswam/viterm/internal/protocol"
+	"github.com/vivek-viswam-rv/viterm/internal/protocol"
 )
 
 func handleRun(args []string, stderr io.Writer) int {

@@ -1,6 +1,6 @@
 package ui
 
-import "github.com/vivekviswam/viterm/internal/layout"
+import "github.com/vivek-viswam-rv/viterm/internal/layout"
 
 // TreeNode is the runtime split tree: either a leaf holding a pane or a
 // two-way split.

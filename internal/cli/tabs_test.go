@@ -6,8 +6,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/vivekviswam/viterm/internal/ipc"
-	"github.com/vivekviswam/viterm/internal/protocol"
+	"github.com/vivek-viswam-rv/viterm/internal/ipc"
+	"github.com/vivek-viswam-rv/viterm/internal/protocol"
 )
 
 func startFakeServer(t *testing.T, handler ipc.Handler) string {

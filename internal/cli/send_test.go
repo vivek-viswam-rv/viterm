@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/vivekviswam/viterm/internal/protocol"
+	"github.com/vivek-viswam-rv/viterm/internal/protocol"
 )
 
 func TestSendCommand(t *testing.T) {

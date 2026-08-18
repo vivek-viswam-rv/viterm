@@ -7,7 +7,7 @@ import (
 	"net"
 	"time"
 
-	"github.com/vivekviswam/viterm/internal/protocol"
+	"github.com/vivek-viswam-rv/viterm/internal/protocol"
 )
 
 // Send dials the Unix domain socket at socketPath, writes cmd as a single

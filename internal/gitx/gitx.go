@@ -13,7 +13,7 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/vivekviswam/viterm/internal/shellx"
+	"github.com/vivek-viswam-rv/viterm/internal/shellx"
 )
 
 // MaxWorktreeNameLength caps worktree directory (and branch) names.

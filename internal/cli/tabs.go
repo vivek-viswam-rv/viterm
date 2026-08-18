@@ -8,7 +8,7 @@ import (
 	"sort"
 	"strings"
 
-	"github.com/vivekviswam/viterm/internal/protocol"
+	"github.com/vivek-viswam-rv/viterm/internal/protocol"
 )
 
 func handleTabs(stdout, stderr io.Writer) int {

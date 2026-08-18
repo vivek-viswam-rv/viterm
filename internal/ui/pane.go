@@ -7,7 +7,7 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/vivekviswam/viterm/internal/term"
+	"github.com/vivek-viswam-rv/viterm/internal/term"
 )
 
 // newID returns a random identifier for panes and tabs.

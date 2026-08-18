@@ -1,4 +1,4 @@
-module github.com/vivekviswam/viterm
+module github.com/vivek-viswam-rv/viterm
 
 go 1.26.2
 

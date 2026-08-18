@@ -9,9 +9,9 @@ import (
 
 	tea "charm.land/bubbletea/v2"
 
-	"github.com/vivekviswam/viterm/internal/cli"
-	"github.com/vivekviswam/viterm/internal/config"
-	"github.com/vivekviswam/viterm/internal/ui"
+	"github.com/vivek-viswam-rv/viterm/internal/cli"
+	"github.com/vivek-viswam-rv/viterm/internal/config"
+	"github.com/vivek-viswam-rv/viterm/internal/ui"
 )
 
 // version is set at build time.

@@ -13,15 +13,15 @@ import (
 	tea "charm.land/bubbletea/v2"
 	uv "github.com/charmbracelet/ultraviolet"
 
-	"github.com/vivekviswam/viterm/internal/claudex"
-	"github.com/vivekviswam/viterm/internal/config"
-	"github.com/vivekviswam/viterm/internal/ghx"
-	"github.com/vivekviswam/viterm/internal/gitx"
-	"github.com/vivekviswam/viterm/internal/ipc"
-	"github.com/vivekviswam/viterm/internal/layout"
-	"github.com/vivekviswam/viterm/internal/protocol"
-	"github.com/vivekviswam/viterm/internal/shellx"
-	"github.com/vivekviswam/viterm/internal/term"
+	"github.com/vivek-viswam-rv/viterm/internal/claudex"
+	"github.com/vivek-viswam-rv/viterm/internal/config"
+	"github.com/vivek-viswam-rv/viterm/internal/ghx"
+	"github.com/vivek-viswam-rv/viterm/internal/gitx"
+	"github.com/vivek-viswam-rv/viterm/internal/ipc"
+	"github.com/vivek-viswam-rv/viterm/internal/layout"
+	"github.com/vivek-viswam-rv/viterm/internal/protocol"
+	"github.com/vivek-viswam-rv/viterm/internal/shellx"
+	"github.com/vivek-viswam-rv/viterm/internal/term"
 )
 
 const (

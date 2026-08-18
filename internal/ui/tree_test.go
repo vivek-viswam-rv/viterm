@@ -3,7 +3,7 @@ package ui
 import (
 	"testing"
 
-	"github.com/vivekviswam/viterm/internal/layout"
+	"github.com/vivek-viswam-rv/viterm/internal/layout"
 )
 
 func newTestPane(id string) *Pane { return &Pane{ID: id} }

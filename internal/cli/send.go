@@ -7,7 +7,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/vivekviswam/viterm/internal/protocol"
+	"github.com/vivek-viswam-rv/viterm/internal/protocol"
 )
 
 func handleSend(args []string, stdout, stderr io.Writer) int {

@@ -6,8 +6,8 @@ import (
 	"io"
 	"os"
 
-	"github.com/vivekviswam/viterm/internal/ipc"
-	"github.com/vivekviswam/viterm/internal/protocol"
+	"github.com/vivek-viswam-rv/viterm/internal/ipc"
+	"github.com/vivek-viswam-rv/viterm/internal/protocol"
 )
 
 // claudeHookPayload is the small subset of a Claude Code hook's stdin JSON

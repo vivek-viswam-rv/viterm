@@ -48,7 +48,7 @@ unidentified developer, control-click the file and choose Open.
 With Go installed:
 
 ```
-go install github.com/vivekviswam/viterm/cmd/viterm@latest
+go install github.com/vivek-viswam-rv/viterm/cmd/viterm@latest
 ```
 
 Or download a binary archive from the releases page and place it on your

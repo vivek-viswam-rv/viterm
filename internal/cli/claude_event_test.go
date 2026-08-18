@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/vivekviswam/viterm/internal/protocol"
+	"github.com/vivek-viswam-rv/viterm/internal/protocol"
 )
 
 func TestClaudeEventStdinParsing(t *testing.T) {

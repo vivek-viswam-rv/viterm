@@ -10,7 +10,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/vivekviswam/viterm/internal/shellx"
+	"github.com/vivek-viswam-rv/viterm/internal/shellx"
 )
 
 // PR describes a resolved pull request.

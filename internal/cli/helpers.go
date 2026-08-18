@@ -7,8 +7,8 @@ import (
 	"os"
 	"strings"
 
-	"github.com/vivekviswam/viterm/internal/ipc"
-	"github.com/vivekviswam/viterm/internal/protocol"
+	"github.com/vivek-viswam-rv/viterm/internal/ipc"
+	"github.com/vivek-viswam-rv/viterm/internal/protocol"
 )
 
 // requireSocket reads VITERM_SOCKET and reports a clear error if it isn't

@@ -13,7 +13,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/vivekviswam/viterm/internal/protocol"
+	"github.com/vivek-viswam-rv/viterm/internal/protocol"
 )
 
 func TestRoundTrip(t *testing.T) {

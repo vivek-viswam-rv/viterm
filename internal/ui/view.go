@@ -10,10 +10,10 @@ import (
 	"charm.land/lipgloss/v2"
 	"github.com/charmbracelet/x/ansi"
 
-	"github.com/vivekviswam/viterm/internal/config"
-	"github.com/vivekviswam/viterm/internal/layout"
-	"github.com/vivekviswam/viterm/internal/protocol"
-	"github.com/vivekviswam/viterm/internal/theme"
+	"github.com/vivek-viswam-rv/viterm/internal/config"
+	"github.com/vivek-viswam-rv/viterm/internal/layout"
+	"github.com/vivek-viswam-rv/viterm/internal/protocol"
+	"github.com/vivek-viswam-rv/viterm/internal/theme"
 )
 
 var (
