@@ -36,13 +36,20 @@ left off.
 
 ## Installation
 
+On macOS, download `viterm-<version>.pkg` from the releases page and open
+it. The installer places a universal binary at `/usr/local/bin/viterm`. If
+macOS reports that the package is from an unidentified developer, control-
+click the file and choose Open.
+
 With Go installed:
 
 ```
 go install github.com/vivekviswam/viterm/cmd/viterm@latest
 ```
 
-Or download a binary from the releases page and place it on your PATH.
+Or download a binary archive from the releases page and place it on your
+PATH. A local installer can be built from a checkout with
+`./scripts/build-pkg.sh <version>`.
 
 Requirements: `git`. Optional: `gh` (GitHub CLI) for pull request status,
 and the `claude` CLI for agent sessions.
