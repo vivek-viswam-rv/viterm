@@ -18,15 +18,12 @@ type Settings struct {
 	// worktree is created, with WORKTREE_DIRECTORY set.
 	PostWorktreeCreateCommand string `json:"postWorktreeCreateCommand"`
 	// Theme names the color theme. An empty value keeps the adaptive
-	// default: the app chrome uses the hosting terminal's ANSI palette,
-	// and the windowed host uses the built-in default theme.
+	// default, where the app chrome uses the hosting terminal's ANSI
+	// palette.
 	Theme string `json:"theme,omitempty"`
 	// Colors overrides individual chrome colors with hex values. Recognized
 	// keys: accent, dim, foreground, stripBackground.
 	Colors map[string]string `json:"colors,omitempty"`
-	// Font and FontSize style the windowed app host's terminal surface.
-	Font     string `json:"font,omitempty"`
-	FontSize int    `json:"fontSize,omitempty"`
 	// Prefix is the key that introduces viterm commands, in a form like
 	// "ctrl+space" or "ctrl+b".
 	Prefix string `json:"prefix,omitempty"`

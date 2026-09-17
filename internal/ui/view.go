@@ -3,7 +3,6 @@ package ui
 import (
 	"fmt"
 	"image/color"
-	"os"
 	"strings"
 
 	tea "charm.land/bubbletea/v2"
@@ -41,7 +40,7 @@ var (
 // chrome styles. With no theme and no overrides the adaptive ANSI defaults
 // above are kept, so the chrome follows the hosting terminal's palette.
 func configureStyles(cfg config.Settings) {
-	if cfg.Theme == "" && len(cfg.Colors) == 0 && os.Getenv("VITERM_HOST") == "" {
+	if cfg.Theme == "" && len(cfg.Colors) == 0 {
 		return
 	}
 	t := theme.Get(cfg.Theme)

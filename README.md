@@ -37,13 +37,12 @@ left off.
 ## Installation
 
 On macOS, download `viterm-<version>.pkg` from the releases page and open
-it. The installer places the `viterm` command at `/usr/local/bin/viterm` and
-a windowed app in Applications. The app opens viterm in its own window with
-its own theme, font, and colors, all controlled by viterm's settings rather
-than by a terminal application. Running `viterm` inside any terminal works
-identically, with the chrome adapting to that terminal's palette unless a
-theme is configured. If macOS reports that the package is from an
-unidentified developer, control-click the file and choose Open.
+it. The installer places a universal binary at `/usr/local/bin/viterm` and
+a launcher in Applications that opens viterm in Terminal. Because viterm is
+a terminal program, the usual way to start it is simply running `viterm` in
+any terminal; the Applications entry is a convenience. If macOS reports
+that the package is from an unidentified developer, control-click the file
+and choose Open.
 
 With Go installed:
 
@@ -118,17 +117,16 @@ Configuration lives in `~/.config/viterm/`:
   ```json
   {
     "theme": "midnight",
-    "font": "JetBrains Mono",
-    "fontSize": 14,
     "colors": { "accent": "#7aa2f7" }
   }
   ```
 
   Built-in themes: `midnight`, `aurora`, `ember`, and `paper`. A theme
-  styles both the app chrome and, in the windowed app, the terminal surface
-  itself. Individual chrome colors can be overridden through `colors`
-  (keys: `accent`, `dim`, `foreground`, `stripBackground`). `font` and
-  `fontSize` apply to the windowed app.
+  styles viterm's own chrome (session strip, tab bars, footer); pane
+  contents keep your terminal's colors and font. With no theme set, the
+  chrome follows your terminal's palette. Individual chrome colors can be
+  overridden through `colors` (keys: `accent`, `dim`, `foreground`,
+  `stripBackground`).
 - `repos.json`: registered repositories and their layouts.
 - `sessions.json`: session records, including detached sessions that can be
   reattached later.
