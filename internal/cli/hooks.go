@@ -50,6 +50,11 @@ func installHooks(dryRun bool, stdout, stderr io.Writer) int {
 		return 1
 	}
 	settingsPath := filepath.Join(home, ".claude", "settings.json")
+	// Dotfile setups often symlink settings.json into a repository; writing
+	// through the link keeps that arrangement intact.
+	if resolved, err := filepath.EvalSymlinks(settingsPath); err == nil {
+		settingsPath = resolved
+	}
 
 	origBytes, readErr := os.ReadFile(settingsPath)
 	existed := readErr == nil

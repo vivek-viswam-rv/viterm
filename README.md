@@ -73,9 +73,11 @@ All commands start with the prefix key, `ctrl+space` by default:
 | `c` / `x` | new / close tab |
 | `n` `p` `1`-`9` | switch tab |
 | `v` / `s` | split right / down |
+| `X` | close pane |
 | `h` `j` `k` `l` | focus pane by direction |
 | `z` | maximize or restore pane |
 | `[` | scrollback copy mode |
+| `L` | clear terminal |
 | `g` / `G` | open / close the diff view |
 | `N` | new session |
 | `d` / `D` | detach / delete session |

@@ -244,3 +244,40 @@ func TestInstallHooksDryRun(t *testing.T) {
 		t.Errorf("dry-run must not write any file, stat err = %v", err)
 	}
 }
+
+func TestInstallHooksFollowsSymlink(t *testing.T) {
+	home := t.TempDir()
+	t.Setenv("HOME", home)
+
+	real := filepath.Join(t.TempDir(), "settings.json")
+	if err := os.WriteFile(real, []byte("{}"), 0o644); err != nil {
+		t.Fatalf("seeding real settings: %v", err)
+	}
+	link := settingsPathFor(home)
+	if err := os.MkdirAll(filepath.Dir(link), 0o755); err != nil {
+		t.Fatalf("mkdir: %v", err)
+	}
+	if err := os.Symlink(real, link); err != nil {
+		t.Fatalf("symlink: %v", err)
+	}
+
+	var stdout, stderr bytes.Buffer
+	if code := installHooks(false, &stdout, &stderr); code != 0 {
+		t.Fatalf("exit code = %d, stderr = %s", code, stderr.String())
+	}
+
+	fi, err := os.Lstat(link)
+	if err != nil {
+		t.Fatalf("lstat: %v", err)
+	}
+	if fi.Mode()&os.ModeSymlink == 0 {
+		t.Error("settings.json is no longer a symlink")
+	}
+	m := decodeSettings(t, mustReadFile(t, real))
+	if cmds := hookCommands(m, "Stop"); !containsSubstring(cmds, "VITERM_SOCKET") {
+		t.Errorf("Stop commands = %v, want one containing VITERM_SOCKET", cmds)
+	}
+	if _, err := os.Stat(real + ".bak"); err != nil {
+		t.Errorf("expected backup next to the real file: %v", err)
+	}
+}

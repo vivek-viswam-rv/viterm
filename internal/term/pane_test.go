@@ -78,3 +78,13 @@ func terminate(p *Pane) {
 	defer cancel()
 	_ = p.Terminate(ctx)
 }
+
+// TestTerminateTwice guards against a double close: the UI may terminate a
+// pane once when its tab closes and again when the session does.
+func TestTerminateTwice(t *testing.T) {
+	p, _ := startShell(t)
+	time.Sleep(300 * time.Millisecond)
+	ctx := context.Background()
+	_ = p.Terminate(ctx)
+	_ = p.Terminate(ctx)
+}

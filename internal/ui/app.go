@@ -7,6 +7,7 @@ package ui
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"strings"
 	"time"
 
@@ -22,6 +23,7 @@ import (
 	"github.com/vivek-viswam-rv/viterm/internal/protocol"
 	"github.com/vivek-viswam-rv/viterm/internal/shellx"
 	"github.com/vivek-viswam-rv/viterm/internal/term"
+	"github.com/vivek-viswam-rv/viterm/internal/theme"
 )
 
 const (
@@ -61,7 +63,11 @@ func New(store *config.Store) (*App, error) {
 		return nil, err
 	}
 	configureStyles(settings)
-	return &App{store: store, settings: settings}, nil
+	app := &App{store: store, settings: settings}
+	if settings.Theme != "" && !theme.Known(settings.Theme) {
+		app.err = fmt.Sprintf("unknown theme %q, using %s", settings.Theme, theme.DefaultName)
+	}
+	return app, nil
 }
 
 // SetProgram attaches the running program so background goroutines can send
@@ -296,6 +302,19 @@ func (a *App) focusedTerminal() *term.Pane {
 	return t.Term
 }
 
+// focusedTab returns the focused pane's active tab, or nil.
+func (a *App) focusedTab() *Tab {
+	s := a.activeSession()
+	if s == nil {
+		return nil
+	}
+	p := s.FocusedPane()
+	if p == nil {
+		return nil
+	}
+	return p.ActiveTab()
+}
+
 func toUVKey(k tea.KeyPressMsg) uv.KeyPressEvent {
 	return uv.KeyPressEvent{
 		Text:        k.Text,
@@ -308,6 +327,9 @@ func toUVKey(k tea.KeyPressMsg) uv.KeyPressEvent {
 }
 
 func (a *App) handleKey(msg tea.KeyPressMsg) (tea.Model, tea.Cmd) {
+	// A footer error stays until the next keystroke; errors raised while
+	// handling this key are set afterwards and so remain visible.
+	a.err = ""
 	if a.showHelp {
 		a.showHelp = false
 		return a, nil
@@ -332,6 +354,12 @@ func (a *App) handleKey(msg tea.KeyPressMsg) (tea.Model, tea.Cmd) {
 	}
 	if msg.Keystroke() == a.settings.Prefix {
 		a.prefixPending = true
+		return a, nil
+	}
+	if t := a.focusedTab(); t != nil && !t.IsTerminal() && msg.Keystroke() == "enter" {
+		if err := shellx.OpenInBrowser(t.URL); err != nil {
+			a.err = err.Error()
+		}
 		return a, nil
 	}
 	if p := a.focusedTerminal(); p != nil {
@@ -600,15 +628,17 @@ func terminateTab(t *Tab) {
 	_ = t.Term.Terminate(ctx)
 }
 
-// detachActiveSession closes the session but keeps it listed for reattach.
-func (a *App) detachActiveSession() {
-	s := a.activeSession()
-	if s == nil {
+// removeSession drops the session at index i from the strip, keeping the
+// active index on the same session where possible. With no sessions left
+// the wizard opens.
+func (a *App) removeSession(i int) {
+	if i < 0 || i >= len(a.sessions) {
 		return
 	}
-	_ = a.store.SetSessionAttached(s.Record.WorktreePath, false)
-	go s.close()
-	a.sessions = append(a.sessions[:a.active], a.sessions[a.active+1:]...)
+	a.sessions = append(a.sessions[:i], a.sessions[i+1:]...)
+	if i < a.active {
+		a.active--
+	}
 	if a.active >= len(a.sessions) {
 		a.active = len(a.sessions) - 1
 	}
@@ -622,6 +652,17 @@ func (a *App) detachActiveSession() {
 	}
 }
 
+// detachActiveSession closes the session but keeps it listed for reattach.
+func (a *App) detachActiveSession() {
+	s := a.activeSession()
+	if s == nil {
+		return
+	}
+	_ = a.store.SetSessionAttached(s.Record.WorktreePath, false)
+	go s.close()
+	a.removeSession(a.active)
+}
+
 // deleteActiveSession removes the session, its worktree, and its agent
 // transcripts.
 func (a *App) deleteActiveSession() tea.Cmd {
@@ -633,18 +674,7 @@ func (a *App) deleteActiveSession() tea.Cmd {
 	repoPath := a.repoPathFor(s.Record.RepoName)
 	_ = a.store.RemoveSession(worktree)
 	go s.close()
-	a.sessions = append(a.sessions[:a.active], a.sessions[a.active+1:]...)
-	if a.active >= len(a.sessions) {
-		a.active = len(a.sessions) - 1
-	}
-	if a.active < 0 {
-		a.active = 0
-	}
-	if len(a.sessions) == 0 {
-		a.openWizard()
-	} else {
-		a.resizePanes()
-	}
+	a.removeSession(a.active)
 	return func() tea.Msg {
 		if repoPath != "" {
 			_ = gitx.RemoveWorktree(repoPath, worktree)
@@ -697,10 +727,11 @@ func (a *App) handlePaneEvent(msg paneEventMsg) (tea.Model, tea.Cmd) {
 					p.RemoveTab(i)
 					if len(p.Tabs) == 0 {
 						if !s.Tree.RemovePane(p.ID) {
-							// Last pane of the session exited.
-							if si == a.active {
-								a.detachActiveSession()
-							}
+							// Last pane of the session exited: detach it so it can be
+							// reattached later, whichever session is in front.
+							_ = a.store.SetSessionAttached(s.Record.WorktreePath, false)
+							go s.close()
+							a.removeSession(si)
 							return a, nil
 						}
 						if s.FocusedID == p.ID {

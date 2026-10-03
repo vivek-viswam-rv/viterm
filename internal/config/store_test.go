@@ -187,3 +187,38 @@ func TestMissingFilesLoadAsZeroValues(t *testing.T) {
 		t.Errorf("Sessions on empty dir = %v, %v", sessions, err)
 	}
 }
+
+func TestWriteJSONFollowsSymlink(t *testing.T) {
+	s := OpenAt(t.TempDir())
+	real := filepath.Join(t.TempDir(), "settings.json")
+	if err := os.WriteFile(real, []byte("{}"), 0o644); err != nil {
+		t.Fatalf("seeding real file: %v", err)
+	}
+	link := filepath.Join(s.Dir, "settings.json")
+	if err := os.Symlink(real, link); err != nil {
+		t.Fatalf("symlink: %v", err)
+	}
+
+	if err := s.SaveSettings(Settings{DiffCommand: "delta"}); err != nil {
+		t.Fatalf("SaveSettings: %v", err)
+	}
+
+	fi, err := os.Lstat(link)
+	if err != nil {
+		t.Fatalf("lstat: %v", err)
+	}
+	if fi.Mode()&os.ModeSymlink == 0 {
+		t.Error("settings.json is no longer a symlink")
+	}
+	data, err := os.ReadFile(real)
+	if err != nil {
+		t.Fatalf("reading real file: %v", err)
+	}
+	var got map[string]any
+	if err := json.Unmarshal(data, &got); err != nil {
+		t.Fatalf("parsing real file: %v", err)
+	}
+	if got["diffCommand"] != "delta" {
+		t.Errorf("diffCommand = %v, want delta", got["diffCommand"])
+	}
+}

@@ -57,7 +57,13 @@ func (s *Store) writeJSON(filename string, v any) error {
 	if err != nil {
 		return err
 	}
-	tmp, err := os.CreateTemp(s.Dir, filename+".*")
+	target := filepath.Join(s.Dir, filename)
+	// Dotfile setups often symlink config files into a repository; writing
+	// through the link keeps that arrangement intact.
+	if resolved, err := filepath.EvalSymlinks(target); err == nil {
+		target = resolved
+	}
+	tmp, err := os.CreateTemp(filepath.Dir(target), filename+".*")
 	if err != nil {
 		return err
 	}
@@ -75,7 +81,7 @@ func (s *Store) writeJSON(filename string, v any) error {
 		os.Remove(tmpName)
 		return err
 	}
-	if err := os.Rename(tmpName, filepath.Join(s.Dir, filename)); err != nil {
+	if err := os.Rename(tmpName, target); err != nil {
 		os.Remove(tmpName)
 		return err
 	}

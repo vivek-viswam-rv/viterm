@@ -76,8 +76,9 @@ type Pane struct {
 	scrollOff  int
 	exited     bool
 
-	dirty  chan struct{}
-	closed chan struct{}
+	dirty     chan struct{}
+	closed    chan struct{}
+	closeOnce sync.Once
 }
 
 // Start launches the shell on a new PTY and begins pumping output into the
@@ -256,16 +257,6 @@ func (p *Pane) Paste(s string) {
 	p.emu.Paste(s)
 }
 
-// MouseEnabled reports whether the running application requested mouse
-// reporting, in which case mouse events should be forwarded rather than used
-// for viewport scrolling.
-func (p *Pane) MouseEnabled() bool {
-	// The emulator drops mouse events itself when reporting is off, so
-	// forwarding is always safe; scrolling behavior is decided by the caller
-	// from the alt-screen state.
-	return p.IsAltScreen()
-}
-
 // IsAltScreen reports whether the alternate screen is active.
 func (p *Pane) IsAltScreen() bool {
 	p.mu.Lock()
@@ -373,12 +364,16 @@ func (p *Pane) CursorPos() (x, y int, visible bool) {
 }
 
 // Terminate stops the child process, escalating from a SIGTERM to the
-// foreground process group up to a SIGKILL, then releases the PTY.
+// foreground process group up to a SIGKILL, then releases the PTY. It is
+// safe to call more than once: the PTY is released only the first time, and
+// later calls return nil immediately once the process has exited.
 func (p *Pane) Terminate(ctx context.Context) error {
 	defer func() {
-		close(p.closed)
-		_ = p.emu.Close()
-		_ = p.ptmx.Close()
+		p.closeOnce.Do(func() {
+			close(p.closed)
+			_ = p.emu.Close()
+			_ = p.ptmx.Close()
+		})
 	}()
 
 	if p.Exited() {
